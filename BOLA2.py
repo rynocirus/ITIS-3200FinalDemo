@@ -38,15 +38,15 @@ def vulnerable_api(logged_in_user, requested_id):
     print(f"\nLogged in as: {logged_in_user}")
     print(f"Sending request: GET /api/user/{requested_id}")
 
-    # ❌ No authorization check
+    # ‼️ No authorization check
     for name, data in users.items():
         if data["id"] == requested_id:
-            print("\nResponse: 200 OK ❌")
+            print("\nResponse: 200 OK ‼️")
             print("{")
             print(f'  "name": "{name}",')
             print(f'  "grade": "{data["grade"]}"')
             print("}")
-            print(f"\nLOG: {logged_in_user} accessed {name}'s data WITHOUT authorization ❌")
+            print(f"\nLOG: {logged_in_user} accessed {name}'s data WITHOUT authorization ‼️")
             return
 
     print("\nResponse: 404 Not Found")
@@ -71,7 +71,7 @@ def secure_api(logged_in_user, requested_id):
                 print(f'  "name": "{name}",')
                 print(f'  "grade": "{data["grade"]}"')
                 print("}")
-                print("\nLOG: Authorized access ✅")
+                print("\nLOG: Authorized access")
             else:
                 print("\nResponse: 403 Forbidden 🚫")
                 print('{ "error": "Access denied" }')
