@@ -86,7 +86,3 @@ Username: Bob     Password: bob123
 BOLA vulnerabilities occur when systems fail to enforce authorization checks. Even if a user is authenticated, they should only be able to access their own data.
 
 ---
-
-## Note
-
-This project is for educational purposes only.
