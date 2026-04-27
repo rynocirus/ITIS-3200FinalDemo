@@ -1,0 +1,85 @@
+# ===============================
+# BOLA Attack & Defense Simulation
+# ===============================
+
+# Simulated Database
+users = {
+    "Alice": {"id": 1, "grade": "A", "password": "alice123"},
+    "Bob": {"id": 2, "grade": "B", "password": "bob123"}
+}
+
+# ===============================
+# LOGIN SYSTEM
+# ===============================
+def login():
+    print("=== SECURE SYSTEM LOGIN ===")
+    for attempt in range(3):
+        username = input("Username: ")
+        password = input("password: ")
+        if username in users and users[username]["password"] == password:
+            print(f"\n[✔] Login successful. Welcome, {username}!\n")
+            return username
+    return None
+
+# ===============================
+# 1. VULNERABLE API (No Auth Check)
+# ===============================
+def vulnerable_api(requested_id):
+    print("\n--- VULNERABLE API ---")
+    for name, data in users.items():
+        if data["id"] == requested_id:
+            print(f"Response: 200 OK - Data for {name} retrieved!")
+            return
+    print("Response: 404 Not Found")
+
+# ===============================
+# 2. FLAWED API (Naive Design)
+# ===============================
+def naive_api(logged_in_user, requested_id):
+    print("\n--- FLAWED API (Naive/Incorrect Design) ---")
+    # FLAW: This only checks IF the user is logged in, 
+    # but trusts the 'requested_id' parameter without verifying ownership.
+    if logged_in_user:
+        for name, data in users.items():
+            if data["id"] == requested_id:
+                print(f"SUCCESS: Data for {name} retrieved via naive logic!")
+                return
+    print("Access denied.")
+
+# ===============================
+# 3. SECURE API (Proper Authorization & Integrity)
+# ===============================
+def secure_api(logged_in_user, requested_id, provided_mac=None):
+    print("\n--- SECURE API (Protected) ---")
+    
+    # 1. Integrity Check (MAC Verification)
+    # Placeholder: In a real system, we'd verify the MAC here.
+    # if not verify_hmac(requested_id, provided_mac):
+    #     print("403 Forbidden: Tampering detected!")
+    #     return
+
+    # 2. Authorization Check (Ownership Verification)
+    user_id = users[logged_in_user]["id"]
+    if requested_id == user_id:
+        print(f"Response: 200 OK - Data for {logged_in_user} retrieved.")
+    else:
+        print("Response: 403 Forbidden - Unauthorized access attempt blocked.")
+
+# ===============================
+# MAIN DEMO
+# ===============================
+def run_demo():
+    user = login()
+    if not user: return
+
+    try:
+        requested_id = int(input("Enter user ID to request (1 or 2): "))
+    except ValueError: return
+
+    # Demonstrate the progression of security
+    vulnerable_api(requested_id)
+    naive_api(user, requested_id)
+    secure_api(user, requested_id)
+
+if __name__ == "__main__":
+    run_demo()
